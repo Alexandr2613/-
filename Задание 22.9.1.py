@@ -20,4 +20,4 @@ right = int(array[-1])
 if element < left or element > right:
     print('Числа нет в диапазоне')
 else:
-    print(binary_search(array, element, 0, len(array) - 1))3 3 3 3
+    print(binary_search(array, element, 0, len(array) - 1))
