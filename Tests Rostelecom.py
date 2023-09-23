@@ -21,7 +21,7 @@ def testing():
 	pytest.driver.quit()
 
 
-# TC-SF-001: Роутинги между формами Авторизации и Регистрации
+# TC-01: Передача между формами Авторизации и Регистрации
 def test_check_routing():
 	page_name = get_page_name("card-container__title")
 	assert page_name == 'Авторизация'
@@ -38,10 +38,10 @@ def test_check_routing():
 	assert page_name == 'Регистрация'
 
 
-# TC-SF-002: Обязательные поля формы Регистрации
+# TC-02: Обязательные поля формы Регистрации
 def test_required_fields():
 	enter_to_registration()
-	# Шаг 1
+	#Шаг 1
 	pytest.driver.find_element(By.NAME, "register").click()
 	error_text = get_error_text('element', '//*[@id="page-right"]/div/div/div/form/div[1]/div[1]/span')
 	assert error_text == 'Необходимо заполнить поле кириллицей. От 2 до 30 символов.'
@@ -59,30 +59,30 @@ def test_required_fields():
 	check_field_errors(By.NAME, "firstName", 'Александр', '//*[@id="page-right"]/div/div/div/form/div[1]/div[1]/span',
 					   "Имя", enter_to_email_tel_confirm)
 	# Шаг 3
-	check_field_errors(By.NAME, "lastName", 'Пушкин', '//*[@id="page-right"]/div/div/div/form/div[1]/div[2]/span',
+	check_field_errors(By.NAME, "lastName", 'Князев', '//*[@id="page-right"]/div/div/div/form/div[1]/div[2]/span',
 					   "Фамилия", enter_to_email_tel_confirm)
 	# Шаг 4
 	check_field_errors(By.ID, 'address', 'test@test.test', '//*[@id="page-right"]/div/div/div/form/div[3]/div/span',
 					   'E-mail или мобильный телефон', enter_to_email_tel_confirm)
 	# Шаг 5
-	check_field_errors(By.NAME, "password", 'Qwerty123!!!', '//*[@id="page-right"]/div/div/div/form/div[4]/div[1]/span',
+	check_field_errors(By.NAME, "password", 'Qwertyuiop261389', '//*[@id="page-right"]/div/div/div/form/div[4]/div[1]/span',
 					   "Пароль", enter_to_email_tel_confirm)
 	# Шаг 6
-	check_field_errors(By.NAME, "password-confirm", 'Qwerty123!!!',
+	check_field_errors(By.NAME, "password-confirm", 'Qwertyuiop261389',
 					   '//*[@id="page-right"]/div/div/div/form/div[4]/div[2]/span',
 					   "Подтверждение пароля", enter_to_email_tel_confirm)
 	page_name = get_page_name("card-container__title")
 	assert page_name == 'Подтверждение email'
 
 
-# TC-SF-003: Валидация поля "Имя" в форме Регистрации
+# TC-03: Валидация поля "Имя" в форме Регистрации
 def test_field_name_validation():
 	enter_to_registration()
 	# Шаг 1
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	error_text = check_field_validation(By.NAME, "firstName", "  ",
 										'//*[@id="page-right"]/div/div/div/form/div[1]/div[1]/span', 'element')
 	assert error_text == 'Необходимо заполнить поле кириллицей. От 2 до 30 символов.'
@@ -114,14 +114,14 @@ def test_field_name_validation():
 	assert page_name == 'Подтверждение email'
 
 
-# TC-SF-004: Валидация поля "Фамилия" в форме Регистрации
+# TC-04: Валидация поля "Фамилия" в форме Регистрации
 def test_field_last_name_validation():
 	enter_to_registration()
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	error_text = check_field_validation(By.NAME, "lastName", "  ",
 										'//*[@id="page-right"]/div/div/div/form/div[1]/div[2]/span', 'element')
 	assert error_text == 'Необходимо заполнить поле кириллицей. От 2 до 30 символов.'
@@ -153,22 +153,22 @@ def test_field_last_name_validation():
 	assert page_name == 'Подтверждение email'
 
 
-# TC-SF-005: Выбор Региона в форме Регистрации
+# TC-05: Выбор Региона в форме Регистрации
 def test_field_region():
 	# Шаг 1, 2
 	enter_to_registration()
 	check_region_field('Москва г')
 	# Шаг 3
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.ID, "address").send_keys('alexandrknyazev89@mail.ru')
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	# Шаг 4
 	pytest.driver.find_element(By.XPATH, '//*[@id="page-right"]/div/div/div/form/div[2]/div/div/input').click()
 	pytest.driver.find_element(By.XPATH,
 							   '//*[@id="page-right"]/div/div/div/form/div[2]/div[2]/div[2]/div/div[4]').click()
-	check_region_field('Алтайский край')
+	check_region_field (Кемеровская область')
 	# Шаг 5
 	pytest.driver.find_element(By.XPATH, '//*[@id="page-right"]/div/div/div/form/div[2]/div/div/input').click()
 	pytest.driver.find_element(By.XPATH,
@@ -180,7 +180,7 @@ def test_field_region():
 	assert page_name == 'Подтверждение email'
 
 
-# TC-SF-007: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Длина Email
+# TC-07: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Длина Email
 @pytest.mark.parametrize("email", [
 	'',
 	'email@mailru',
@@ -203,23 +203,23 @@ def test_field_region():
 def test_field_email_validation(email):
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 
 	error_text = check_field_validation(By.ID, "address", email,
 										'//*[@id="page-right"]/div/div/div/form/div[3]/div/span', 'element')
 	assert error_text == 'Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru'
 
 
-# TC-SF-007: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Маска Email
+# TC-07: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Маска Email
 def test_field_email_mask_validation():
 	enter_to_registration()
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	error_text = check_field_validation(By.ID, "address", "@.",
 										'//*[@id="page-right"]/div/div/div/form/div[3]/div/span', 'element')
 	assert error_text == 'Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru'
@@ -235,13 +235,13 @@ def test_field_email_mask_validation():
 	assert name_data == "Александр"
 	l_name_data = get_field_data('//*[@id="page-right"]/div/div/div/form/div[1]/div[2]/div/span[1]',
 								 '//*[@id="page-right"]/div/div/div/form/div[1]/div[2]/div/span[1]/span[1]')
-	assert l_name_data == "Пушкин"
+	assert l_name_data == "Князев"
 	email_data = get_field_data('//*[@id="page-right"]/div/div/div/form/div[3]/div/div/span[1]',
 								'//*[@id="page-right"]/div/div/div/form/div[3]/div/div/span[1]/span[1]')
 	assert email_data == "e@m.r"
 	region_data = get_field_data('//*[@id="page-right"]/div/div/div/form/div[2]/div/div/span[1]',
 								 '//*[@id="page-right"]/div/div/div/form/div[2]/div/div/span[1]/span[1]')
-	assert region_data == "Москва г"
+	assert region_data == "Кемерово г"
 	#
 	push_registration_button('email')
 	# # Шаг 4
@@ -267,25 +267,21 @@ def test_field_email_mask_validation():
 										   '//*[@id="page-right"]/div/div/div/form/div[4]/div[2]/div/span[1]/span[1]')
 	assert confirm_password_data == ''
 	# Шаг 5
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	clear_field(By.ID, "address")
-	pytest.driver.find_element(By.ID, "address").send_keys('email@mail.ruuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
-														   'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
-														   'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
-														   'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
-														   'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuus')
+	pytest.driver.find_element(By.ID, "address").send_keys('email@mail.ruuuus')
 	push_registration_button('email')
 
 
-# TC-SF-008: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Автоподстановка кода страны (+7)
+# TC-08: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Автоподстановка кода страны (+7)
 def test_field_email_tel_code():
 	enter_to_registration()
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	error_text = check_field_validation(By.ID, "address", "1884441122",
 										'//*[@id="page-right"]/div/div/div/form/div[3]/div/span', 'element')
 	assert error_text == 'Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru'
@@ -301,14 +297,14 @@ def test_field_email_tel_code():
 	push_registration_button('tel')
 
 
-# TC-SF-009: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Автоподстановка кода страны (+375)
+# TC-09: Валидация поля "E-mail или мобильный телефон" в форме Регистрации". Автоподстановка кода страны (+375)
 def test_field_email_tel_code_bel():
 	enter_to_registration()
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	error_text = check_field_validation(By.ID, "address", "291234567",
 										'//*[@id="page-right"]/div/div/div/form/div[3]/div/span', 'element')
 	assert error_text == 'Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru'
@@ -324,13 +320,13 @@ def test_field_email_tel_code_bel():
 	push_registration_button('tel')
 
 
-# TC-SF-010: Валидация поля "Пароль" в форме "Регистрации" по длине
+# TC-10: Валидация поля "Пароль" в форме "Регистрации" по длине
 def test_field_password_length():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	# Шаг 1-2
 	password_hint_xpath = '//*[@id="page-right"]/div/div/div/form/div[4]/div[1]/span'
 	print('\n')
@@ -340,7 +336,7 @@ def test_field_password_length():
 	# Шаг 5-6
 	check_password_length_hints("password", 'Qwerty12', password_hint_xpath)
 	# Шаг 7
-	check_password_length_hints("password", 'Qwerty78901234567890', password_hint_xpath)
+	check_password_length_hints("password", 'Qwerty711111111111111111111111111111111', password_hint_xpath)
 	# Шаг 8
 	pytest.driver.find_element(By.NAME, "password").send_keys("1")
 	pytest.driver.find_element(By.NAME, "password-confirm").click()
@@ -349,13 +345,13 @@ def test_field_password_length():
 	print(error_text)
 
 
-# TC-SF-011: Валидация поля "Пароль" в форме "Регистрации" по допустимым символам
+# TC-11: Валидация поля "Пароль" в форме "Регистрации" по допустимым символам
 def test_field_password_symbols():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password-confirm").send_keys("Qwertyuiop261389")
 	# Шаг 1-2
 	password_hint_xpath = '//*[@id="page-right"]/div/div/div/form/div[4]/div[1]/span'
 	error_text = check_field_errors_with_clear_field(By.NAME, 'password', 'фываячсм', click_name_field,
@@ -387,13 +383,13 @@ def test_field_password_symbols():
 					   "Пароль", click_name_field)
 
 
-# TC-SF-012: Валидация поля "Подтверждение пароля" в форме "Регистрации" по длине
+# TC-012: Валидация поля "Подтверждение пароля" в форме "Регистрации" по длине
 def test_field_password_confirm_length():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
 	# Шаг 1-2
 	print('\n')
 	password_hint_xpath = '//*[@id="page-right"]/div/div/div/form/div[4]/div[2]/span'
@@ -412,13 +408,13 @@ def test_field_password_confirm_length():
 	print(error_text)
 
 
-# TC-SF-013: Валидация поля "Подтверждение пароля" в форме "Регистрации" по допустимым символам
+# TC-013: Валидация поля "Подтверждение пароля" в форме "Регистрации" по допустимым символам
 def test_field_password_confirm_symbols():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
-	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty123!!!")
+	pytest.driver.find_element(By.NAME, "password").send_keys("Qwertyuiop261389")
 	# Шаг 1-2
 	password_hint_xpath = '//*[@id="page-right"]/div/div/div/form/div[4]/div[2]/span'
 	error_text = check_field_errors_with_clear_field(By.NAME, 'password-confirm',
@@ -450,11 +446,11 @@ def test_field_password_confirm_symbols():
 					   '//*[@id="page-right"]/div/div/div/form/div[4]/div[1]/span', "Пароль", click_name_field)
 
 
-# TC-SF-014: Валидация подверждения пароля в форме "Регистрации"
+# TC-014: Валидация подверждения пароля в форме "Регистрации"
 def test_field_password_confirmation():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "password").send_keys("Qwerty!№")
@@ -469,14 +465,14 @@ def test_field_password_confirmation():
 	push_registration_button('email')
 
 
-# TC-SF-015: Надёжность пароля в форме "Регистрации"
+# TC-015: Надёжность пароля в форме "Регистрации"
 def test_field_password_defense():
 	enter_to_registration()
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
-	pytest.driver.find_element(By.ID, "address").send_keys('test@test.test')
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
+	pytest.driver.find_element(By.ID, "address").send_keys('alexandrknyazev89@mail.ru')
 	# Шаг 1
-	password = "Qwerty123"
+	password = "Qwertyuiop261389"
 	pytest.driver.find_element(By.NAME, "password").send_keys(password)
 	# Шаг 2
 	password_hint_xpath = '//*[@id="form-error-message"]'
@@ -485,7 +481,7 @@ def test_field_password_defense():
 	assert error_text == 'Пароль ненадежный. Необходимо придумать более сложный пароль.'
 
 
-# TC-SF-016: Открытие документов "Пользовательское соглашение"
+# TC-016: Открытие документов "Пользовательское соглашение"
 def test_docs_agreement():
 	enter_to_registration()
 	# Шаг 1
@@ -499,7 +495,7 @@ def test_docs_agreement():
 	check_page_agreement()
 
 
-# TC-SF-017: Открытие документа "Политика конфиденциальности"
+# TC-017: Открытие документа "Политика конфиденциальности"
 def test_docs_privacy():
 	enter_to_registration()
 	# Шаг 1
@@ -508,7 +504,7 @@ def test_docs_privacy():
 	check_page_agreement()
 
 
-# TC-SF-018: Возможность набора номера телефона
+# TC-018: Возможность набора номера телефона
 def test_tel_number():
 	enter_to_registration()
 	# Шаг 1
@@ -516,14 +512,14 @@ def test_tel_number():
 	pytest.driver.find_element(By.CLASS_NAME, 'rt-footer-right__support-phone').click()
 
 
-# TC-SF-020: Повторный запрос кода
+# TC-020: Повторный запрос кода
 def test_tel_code_negative():
 	enter_to_registration()
 	# Шаг 1
 	pytest.driver.find_element(By.NAME, "firstName").send_keys("Александр")
-	pytest.driver.find_element(By.NAME, "lastName").send_keys("Пушкин")
+	pytest.driver.find_element(By.NAME, "lastName").send_keys("Князев")
 	pytest.driver.find_element(By.ID, "address").send_keys('9884441122')
-	password = "Qwerty12!"
+	password = "Qwertyuiop261389"
 	pytest.driver.find_element(By.NAME, "password").send_keys(password)
 	pytest.driver.find_element(By.NAME, "password-confirm").send_keys(password)
 	# Шаг 2
@@ -538,12 +534,12 @@ def test_tel_code_negative():
 	assert "Получить код повторно" in timer
 
 
-# TC-SF-021: Изменение Email после отправки кода
+# TC-021: Изменение Email после отправки кода
 def test_button_change_mail():
 	enter_to_registration()
 	# Шаг 1
-	first_name, last_name, address = "Александр", "Пушкин", '79884441122'
-	password = "Qwerty12!"
+	first_name, last_name, address = "Александр", "Князев", '79884441122'
+	password = "Qwertyuiop261389"
 	region_1 = get_field_data('//*[@id="page-right"]/div/div/div/form/div[2]/div/div/span[1]',
 							'//*[@id="page-right"]/div/div/div/form/div[2]/div/div/span[1]/span[1]')
 	pytest.driver.find_element(By.NAME, "firstName").send_keys(first_name)
@@ -585,7 +581,7 @@ def test_button_change_mail():
 	assert password_confirm_empty is None or password_confirm_empty == ""
 
 
-# TC-SF-022: Открытие документов "Пользовательское соглашение"
+# TC-022: Открытие документов "Пользовательское соглашение"
 def test_modal_cookie():
 	enter_to_registration()
 	# Шаг 1
